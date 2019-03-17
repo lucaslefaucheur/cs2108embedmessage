@@ -1,5 +1,6 @@
 close all
 clear all
+cd 'C:\Users\hccha\Documents\Introduction to Media Computing'
 
 % read audio file
 filename = 'Edelweiss.mp3';
@@ -24,8 +25,10 @@ y = y+sig+sig1;
 
 % write to audio file
 audiowrite('edelweiss_36seconds.mp4', y, Fs)
+[y, Fs] = audioread('edelweiss_36seconds.mp4');
 
 % fft result
+figure
 L = Fs*36;
 Y = fft(y);
 f = Fs*(0:(L/2))/L;
@@ -34,4 +37,17 @@ P1 = P2(1:L/2+1);
 P1(2:end-1) = 2*P1(2:end-1);
 plot(f, P1)
 
+[sortpks, sortlocs] = findpeaks(P1(4500:end));
+for i = 1:length(sortpks)
+   if sortpks(i) > 20000
+       sortpks(i) 
+       sortlocs(i) / 35.1
+   end
+end
+
 % 6228
+function [sortpks, sortlocs] = detect(Y)
+[pks,locs] = findpeaks(Y);
+[sortpks, index] = sort(pks, 'descend');
+sortlocs = locs(index)';
+end
