@@ -8,7 +8,8 @@ sourcePath = 'Edelweiss.mp3';
 % clip to _ seconds
 time = 36;
 y = y(1 : Fs*time);
-clipPath = strcat('edelweiss_', time, 'seconds.mp4');
+timestr = num2str(time);
+clipPath = strcat('edelweiss_', timestr, 'seconds.mp4');
 audiowrite(clipPath, y, Fs)
 
 % embed message
