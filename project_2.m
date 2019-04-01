@@ -1,6 +1,8 @@
 close all
 clear
 
+warning('off', 'MATLAB:colon:nonIntegerIndex')
+
 % read initial data
 sourcePath = 'Edelweiss.mp3';
 [y, Fs] = audioread(sourcePath);
