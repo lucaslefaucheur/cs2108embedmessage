@@ -14,9 +14,10 @@ music = audiorecorder(Fs, 16, 1);
 % recording starts and completes.
 music.StartFcn = 'disp("Start speaking.")';
 music.StopFcn = 'disp("End of recording.")';
-recordblocking(music, 10+2);
+recordblocking(music, 36+2);
 y = getaudiodata(music);
 y = y(2*Fs+1:end);
+audiowrite('record.mp4', y, Fs);
 %}
 decode(y, Fs, freq_scale, sig_len)
 
