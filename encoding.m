@@ -1,6 +1,5 @@
 close all
 clear all
-
 warning('off', 'MATLAB:colon:nonIntegerIndex')
 
 % read initial data
@@ -15,11 +14,11 @@ clipPath = strcat('edelweiss_', timestr, 'seconds.mp4');
 audiowrite(clipPath, y, Fs)
 
 % param
-amp_scale = 0.015;
+amp_scale = 0.01;
 freq_scale = 110;
 
 % embed message
-message = 'Today is a bright sunny day. It is the D day. Everyone is excited. We want to demonstrate our course project in our CS2108 Introduction to Media Computing.';
+message = 'Today is a bright sunny day. It is the D day. Everyone is excited. We want to demonstrate our course project in our CS2108 Intro to Media Computing.';
 sig_len = time/length(message); % second(s)
 y_encoded = encode(y, Fs, message, amp_scale, freq_scale, sig_len);
 save param.mat freq_scale sig_len % export variables
@@ -36,7 +35,8 @@ function sig = encode(y, sampFreq, embedMsg, ampScale, freqScale, sigLen)
     len = length(t); % sampFreq*sigLen
     sig = y;
     
-    win = fir1(8, 0.20);
+    % apply low pass filter
+    win = fir1(32, 0.1);
     fwin = fftshift(fft(win, length(sig)));
     fsig = fftshift(fft(sig));
     csig = fsig .* fwin;
@@ -44,7 +44,8 @@ function sig = encode(y, sampFreq, embedMsg, ampScale, freqScale, sigLen)
     
     left = -length(y)/2;
     right = length(y)/2-1;
-
+    
+    % plot for visualization
     figure
     subplot(3,1,1), plot([left:right], log(abs(fsig)));
     subplot(3,1,2), plot([left:right], log(abs(fwin)));
@@ -56,6 +57,7 @@ function sig = encode(y, sampFreq, embedMsg, ampScale, freqScale, sigLen)
         sig((i-1)*len + 1 : i*len) = s + ampScale*sin(2*pi*f*t);
     end
     
+    % plot for visualization
     Y = abs(fft(sig));
     Y = Y(1 : length(Y)/2 + 1); 
     X = (0 : length(Y)-1) * (sampFreq/(length(Y)*2));
